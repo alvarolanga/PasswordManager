@@ -1,0 +1,92 @@
+<!doctype html>
+<title>Register</title>
+<h2>Register</h2>
+<style>
+
+  body {
+    font-family: Arial, sans-serif;
+    max-width: 400px;
+    margin: 2rem auto;
+    padding: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+  }
+  label {
+    display: block;
+    margin-top: 1rem;
+  }
+  input[type="text"],
+  input[type="password"] {
+    width: 100%;
+    padding: 0.5rem;
+    box-sizing: border-box;
+  }
+  input[type="submit"] {
+    margin-top: 1rem;
+    padding: 0.5rem 1rem;
+  }
+  .flashes {
+    color: red;
+    list-style: none;
+    padding: 0;
+  }
+  a {
+    display: inline-block;
+    margin-top: 1rem;
+  }
+</style>
+
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <ul style="color:#3d30ea;">
+      {% for message in messages %}
+        <li>{{ message }}</li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+{% endwith %}
+
+<form method="POST" id="register-form">
+    {{ form.hidden_tag() }}
+
+    {{ form.username.label }}<br>
+    {{ form.username(id="username", autocomplete="username") }}<br>
+
+    {{ form.password.label }}<br>
+    {{ form.password(id="password", autocomplete="new-password") }}<br>
+
+    <button type="button" id="generate-password-btn">Generate Password</button><br>
+
+    {{ form.submit() }}
+</form>
+
+<a href="{{ url_for('login') }}">Login</a>
+
+<script>
+  // On page load, try to fill password from localStorage
+  window.addEventListener('DOMContentLoaded', () => {
+    const savedPassword = localStorage.getItem('generatedPassword');
+    if (savedPassword) {
+      document.getElementById('password').value = savedPassword;
+    }
+  });
+
+  document.getElementById('generate-password-btn').addEventListener('click', function() {
+    fetch('/generate-password?length=12&digits=1&special=1')
+      .then(response => response.json())
+      .then(data => {
+        document.getElementById('password').value = data.password;
+        // Save generated password to localStorage
+        localStorage.setItem('generatedPassword', data.password);
+      })
+      .catch(error => {
+        alert('Error generating password');
+        console.error(error);
+      });
+  });
+
+  // Optionally clear saved password on form submit so next visit won't autofill
+  document.getElementById('register-form').addEventListener('submit', () => {
+    localStorage.removeItem('generatedPassword');
+  });
+</script>

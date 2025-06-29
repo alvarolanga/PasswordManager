@@ -1,0 +1,57 @@
+<!doctype html>
+<title>Login</title>
+
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    max-width: 400px;
+    margin: 2rem auto;
+    padding: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+  }
+  label {
+    display: block;
+    margin-top: 1rem;
+  }
+  input[type="text"],
+  input[type="password"] {
+    width: 100%;
+    padding: 0.5rem;
+    box-sizing: border-box;
+  }
+  input[type="submit"] {
+    margin-top: 1rem;
+    padding: 0.5rem 1rem;
+  }
+  .flashes {
+    color: red;
+    list-style: none;
+    padding: 0;
+  }
+  a {
+    display: inline-block;
+    margin-top: 1rem;
+  }
+</style>
+
+<h2>Login</h2>
+
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <ul class="flashes">
+      {% for message in messages %}
+        <li>{{ message }}</li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+{% endwith %}
+
+<form method="POST">
+    {{ form.hidden_tag() }}
+    {{ form.username.label }} {{ form.username() }}<br>
+    {{ form.password.label }} {{ form.password() }}<br>
+    {{ form.submit() }}
+</form>
+
+<a href="{{ url_for('register') }}">Register</a>

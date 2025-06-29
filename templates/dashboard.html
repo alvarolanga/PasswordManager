@@ -1,0 +1,89 @@
+<!doctype html>
+<title>Dashboard</title>
+
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    max-width: 600px;
+    margin: 2rem auto;
+    padding: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+  }
+  label {
+    display: block;
+    margin-top: 1rem;
+  }
+  input[type="text"],
+  input[type="password"] {
+    width: 100%;
+    padding: 0.5rem;
+    box-sizing: border-box;
+  }
+  input[type="submit"],
+  button {
+    margin-top: 1rem;
+    padding: 0.5rem 1rem;
+  }
+  .credential-list {
+    margin-top: 2rem;
+    border-top: 1px solid #ccc;
+    padding-top: 1rem;
+  }
+  .credential {
+    margin-bottom: 1rem;
+  }
+</style>
+
+<h2>Dashboard - Add Credential</h2>
+
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <ul class="flashes" style="color:#000000;">
+      {% for message in messages %}
+        <li>{{ message }}</li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+{% endwith %}
+
+<form method="POST" id="credential-form">
+    {{ form.hidden_tag() }}
+
+    {{ form.service.label }}<br>
+    {{ form.service(size=40) }}<br>
+
+    {{ form.username.label }}<br>
+    {{ form.username(size=40) }}<br>
+
+    {{ form.password.label }}<br>
+    {{ form.password(id="password", size=40) }}
+    <button type="button" id="generate-password-btn">Generate Password</button><br>
+
+    {{ form.submit() }}
+</form>
+
+<div class="credential-list">
+  <h3>Your Credentials</h3>
+  {% for cred in credentials %}
+    <div class="credential">
+      <strong>Service:</strong> {{ cred.service }}<br>
+      <strong>Username:</strong> {{ cred.username }}<br>
+      <strong>Password:</strong> {{ cred.password_plain }}<br>
+    </div>
+  {% endfor %}
+</div>
+
+<script>
+document.getElementById('generate-password-btn').addEventListener('click', function() {
+    fetch('/generate-password?length=12&digits=1&special=1')
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById('password').value = data.password;
+        })
+        .catch(error => {
+            alert('Error generating password');
+            console.error(error);
+        });
+});
+</script>
