@@ -1,35 +1,36 @@
 <!doctype html>
 <title>Login</title>
 
-<style>
+<style> /*Styles the whole html file*/
   body {
-    font-family: Arial, sans-serif;
+    font-family: "Times New Roman", sans-serif;
     max-width: 400px;
     margin: 2rem auto;
     padding: 1rem;
-    border: 1px solid #ddd;
+    border: 1px solid #000000;
     border-radius: 5px;
+    background-color: #23e33c;
   }
-  label {
+  label { /*Style of the label*/
     display: block;
     margin-top: 1rem;
   }
-  input[type="text"],
+  input[type="text"], /*Style of the input text*/
   input[type="password"] {
     width: 100%;
     padding: 0.5rem;
     box-sizing: border-box;
   }
-  input[type="submit"] {
+  input[type="submit"] { /*Style of the submit button*/
     margin-top: 1rem;
     padding: 0.5rem 1rem;
   }
-  .flashes {
+  .flashes { /*Style of the flashes*/
     color: red;
     list-style: none;
     padding: 0;
   }
-  a {
+  a { /*Style of the links*/
     display: inline-block;
     margin-top: 1rem;
   }
@@ -37,7 +38,7 @@
 
 <h2>Login</h2>
 
-{% with messages = get_flashed_messages() %}
+{% with messages = get_flashed_messages() %} <!--Flashes are the errors-->
   {% if messages %}
     <ul class="flashes">
       {% for message in messages %}
@@ -47,11 +48,16 @@
   {% endif %}
 {% endwith %}
 
-<form method="POST">
+<form method="POST"> <!--Form to send the data-->
     {{ form.hidden_tag() }}
     {{ form.username.label }} {{ form.username() }}<br>
     {{ form.password.label }} {{ form.password() }}<br>
     {{ form.submit() }}
 </form>
 
-<a href="{{ url_for('register') }}">Register</a>
+<a href="{{ url_for('register') }}">Register</a> <!--Link to register page-->
+
+{% if current_user.is_authenticated %} <!-- If the user is authenticated show logout link-->
+  <a href="{{ url_for('logout') }}">Logout</a>
+{% endif %}
+

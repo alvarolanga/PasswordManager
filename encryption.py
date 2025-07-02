@@ -1,10 +1,14 @@
-from cryptography.fernet import Fernet
+from cryptography.fernet import Fernet #print(Fernet.generate_key().decode())
+from config import Config
 
-key = Fernet.generate_key()  # Store this securely in production
-cipher = Fernet(key)
+cipher = Fernet(Config.ENCRYPTION_KEY.encode())
 
 def encrypt_password(password):
     return cipher.encrypt(password.encode())
 
 def decrypt_password(token):
-    return cipher.decrypt(token).decode()
+    try:
+        return cipher.decrypt(token).decode()
+    except Exception:
+        return "[Invalid or corrupted password]"
+

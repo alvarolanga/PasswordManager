@@ -2,42 +2,54 @@
 <title>Dashboard</title>
 
 <style>
-  body {
-    font-family: Arial, sans-serif;
+  body { /*Styles the whole html file*/
+    font-family: "Times New Roman", sans-serif;
     max-width: 600px;
     margin: 2rem auto;
     padding: 1rem;
-    border: 1px solid #ddd;
+    border: 1px solid #000000;
     border-radius: 5px;
+    background-color: #23e33c;
   }
-  label {
+  label { /*Style of the label*/
     display: block;
     margin-top: 1rem;
   }
   input[type="text"],
-  input[type="password"] {
+  input[type="password"] { /*Style of the input text*/
     width: 100%;
     padding: 0.5rem;
     box-sizing: border-box;
   }
-  input[type="submit"],
+  input[type="submit"], /*Style of the submit button*/
   button {
     margin-top: 1rem;
     padding: 0.5rem 1rem;
   }
-  .credential-list {
+  .credential-list { /*Style of the credential list*/
     margin-top: 2rem;
-    border-top: 1px solid #ccc;
+    border-top: 1px solid #000000;
     padding-top: 1rem;
   }
-  .credential {
+  .credential { /*Style of the credential*/
+    margin-bottom: 1rem;
+  }
+  /* Just to move logout link to right */
+  .logout-link {
+    text-align: right;
     margin-bottom: 1rem;
   }
 </style>
 
+<div class="logout-link"> <!--Link to logout page-->
+  {% if current_user.is_authenticated %}
+    <a href="{{ url_for('logout') }}">Logout</a>
+  {% endif %}
+</div>
+
 <h2>Dashboard - Add Credential</h2>
 
-{% with messages = get_flashed_messages() %}
+{% with messages = get_flashed_messages() %} <!--Flashes are the errors-->
   {% if messages %}
     <ul class="flashes" style="color:#000000;">
       {% for message in messages %}
@@ -47,7 +59,7 @@
   {% endif %}
 {% endwith %}
 
-<form method="POST" id="credential-form">
+<form method="POST" id="credential-form"> <!--Form to send the data-->
     {{ form.hidden_tag() }}
 
     {{ form.service.label }}<br>
@@ -58,12 +70,12 @@
 
     {{ form.password.label }}<br>
     {{ form.password(id="password", size=40) }}
-    <button type="button" id="generate-password-btn">Generate Password</button><br>
+    <button type="button" id="generate-password-btn">Generate Password</button><br> <!--Button to generate a password-->
 
     {{ form.submit() }}
 </form>
 
-<div class="credential-list">
+<div class="credential-list"> <!--List of credentials-->
   <h3>Your Credentials</h3>
   {% for cred in credentials %}
     <div class="credential">
